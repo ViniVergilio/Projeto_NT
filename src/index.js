@@ -119,11 +119,11 @@ app.post ('/clients/:cli_id', async(req,res) =>{
         }
     })
 
-app.get('/users/:emp_id', async (req,res) =>{
-    const {emp_id} = req.params
+app.get('/cli/:cli_id', async (req,res) =>{
+    const {cli_id} = req.params
     try {
-        const allUsers = await pool.query('SELECT * FROM users WHERE tas_id = ($1)', [emp_id])
-        return res.status(200).send(allUsers.rows)
+        const allClients = await pool.query('SELECT * FROM users WHERE tas_id = ($1)', [emp_id])
+        return res.status(200).send(allClients.rows)
     } catch(err) {
         return res.status(400),send(err)
     }
