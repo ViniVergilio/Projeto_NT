@@ -2,7 +2,7 @@ const express = require('express')
 const  { Pool } = require('pg')
 require('dotenv').config()
 
-const PORT = 3334
+const PORT = 3335
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL
 })
@@ -112,18 +112,39 @@ app.post ('/clients/:cli_id', async(req,res) =>{
     const {description, done } = req.body
     const {cli_id } = req.params
     try{
-        const newCli = await pool.query('INSERT INTO clients (( cli_id, cli_cnpj,  cli_name, cli_email, cli_tel, cli_ativ) VALUES ($1, $2, $3, $4, $5,) RETURNING *', [cliid, clicnpj, climail, clitel, cliativo])
+        const newCli = await pool.query('INSERT INTO clients ( cli_id, cli_cnpj,  cli_name, cli_email, cli_tel, cli_ativ) VALUES ($1, $2, $3, $4, $5,) RETURNING *', [cliid, clicnpj, climail, clitel, cliativo])
         return res.status(200).send(newCli.rows)
     }catch(err) {
         return res.status(400).send(err)
         }
     })
 
-app.get('/cli/:cli_id', async (req,res) =>{
+app.get('/clients/:cli_id', async (req,res) =>{
     const {cli_id} = req.params
     try {
         const allClients = await pool.query('SELECT * FROM users WHERE tas_id = ($1)', [emp_id])
         return res.status(200).send(allClients.rows)
+    } catch(err) {
+        return res.status(400),send(err)
+    }
+})
+
+app.post ('/especialitys/:esp_id', async(req,res) =>{
+    const {description, done } = req.body
+    const {esp_id } = req.params
+    try{
+        const newEspecialitys = await pool.query('INSERT INTO especialitys ( esp_id, esp_desc) VALUES ($1, $2) RETURNING *', [especialitysid, especialitysdescripition])
+        return res.status(200).send(newEspecialitys.rows)
+    }catch(err) {
+        return res.status(400).send(err)
+        }
+    })
+
+app.get('/especialitys/:esp_id', async (req,res) =>{
+    const {esp_id} = req.params
+    try {
+        const allEspecialitys = await pool.query('SELECT * FROM especialitys WHERE esp_id = ($1)', [esp_id])
+        return res.status(200).send(allEspecialitys.rows)
     } catch(err) {
         return res.status(400),send(err)
     }
